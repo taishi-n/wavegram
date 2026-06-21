@@ -6,12 +6,15 @@ export function drawCursor(
   shadowColor = "rgba(0, 0, 0, 0.45)",
 ): void {
   if (!Number.isFinite(duration) || duration <= 0) return;
+  const progress = currentTime / duration;
+  if (!Number.isFinite(progress) || progress >= 1) return;
+
   const context = canvas.getContext("2d");
   if (!context) return;
 
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
-  const x = Math.max(0, Math.min(width, (currentTime / duration) * width));
+  const x = Math.max(0, Math.min(width, progress * width));
   context.save();
   context.strokeStyle = shadowColor;
   context.lineWidth = 2;

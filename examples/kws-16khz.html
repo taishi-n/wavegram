@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wavegram - KWS 16 kHz WAV</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+      body {
+        margin: 24px;
+        font-family: system-ui, sans-serif;
+      }
+      main {
+        display: grid;
+        gap: 10px;
+        max-width: 900px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      p {
+        margin: 0;
+        color: #555555;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>KWS-Dataset 16 kHz WAV</h1>
+      <p>Source: fkuhne/KWS-Dataset, wavs/azul/azul_049790d02893494f8d9950c4f68cd722.wav</p>
+      <wavegram-player
+        show-time
+        src="https://raw.githubusercontent.com/fkuhne/KWS-Dataset/main/wavs/azul/azul_049790d02893494f8d9950c4f68cd722.wav"
+      ></wavegram-player>
+    </main>
+  </body>
+</html>

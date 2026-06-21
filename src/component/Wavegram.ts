@@ -1,6 +1,7 @@
 import { decodeAudioData } from "../audio/decodeAudio";
 import { loadAudio } from "../audio/loadAudio";
 import { createAudioElement } from "../audio/playback";
+import { readAudioFileSampleRate } from "../audio/readAudioSampleRate";
 import { computeSpectrogram } from "../audio/spectrogram";
 import { computeWaveformPeaksFromBuffer } from "../audio/waveform";
 import { configureCanvas } from "../render/canvas";
@@ -241,12 +242,14 @@ export class Wavegram extends HTMLElement {
 
   private audio?: HTMLAudioElement;
   private audioBuffer?: AudioBuffer;
+  private sourceSampleRate?: number;
   private waveformPeaks?: WaveformPeaks;
   private spectrogram?: SpectrogramData;
   private worker?: Worker;
   private resizeObserver?: ResizeObserver;
   private animationFrame = 0;
   private loadingToken = 0;
+  private waveformPeaksWidth = 0;
   private blobUrl?: string;
   private playRequestedAt?: number;
 
@@ -457,7 +460,7 @@ export class Wavegram extends HTMLElement {
     this.addEventListener("keydown", this.handleKeydown);
     this.tabIndex = this.tabIndex >= 0 ? this.tabIndex : 0;
 
-    this.resizeObserver = new ResizeObserver(() => this.layoutAndRender());
+    this.resizeObserver = new ResizeObserver(() => this.handleResize());
     this.resizeObserver.observe(this);
 
     this.layoutAndRender();
@@ -500,7 +503,9 @@ export class Wavegram extends HTMLElement {
     this.setStatus(src ? "Loading" : "");
     this.dispatchTypedEvent("loadstart");
     this.button.disabled = true;
+    this.sourceSampleRate = undefined;
     this.waveformPeaks = undefined;
+    this.waveformPeaksWidth = 0;
     this.spectrogram = undefined;
     this.layoutAndRender();
 
@@ -518,13 +523,14 @@ export class Wavegram extends HTMLElement {
       const arrayBuffer = await loadAudio(src);
       const fetchDoneAt = performance.now();
       if (token !== this.loadingToken) return;
+      this.sourceSampleRate = readAudioFileSampleRate(arrayBuffer);
 
       this.blobUrl = URL.createObjectURL(new Blob([arrayBuffer]));
       this.audio = createAudioElement(this.blobUrl, this.autoplay);
       this.bindAudio();
       const audioReady = this.waitForAudioReady(this.audio);
 
-      this.audioBuffer = await decodeAudioData(arrayBuffer);
+      this.audioBuffer = await decodeAudioData(arrayBuffer, this.sourceSampleRate);
       const decodeDoneAt = performance.now();
       if (token !== this.loadingToken) return;
 
@@ -533,6 +539,7 @@ export class Wavegram extends HTMLElement {
       this.waveformPeaks = this.showWaveform
         ? computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel)
         : undefined;
+      this.waveformPeaksWidth = this.waveformPeaks ? width : 0;
       const waveformDoneAt = performance.now();
       await audioReady;
       const audioReadyDoneAt = performance.now();
@@ -570,6 +577,7 @@ export class Wavegram extends HTMLElement {
     this.waveformPeaks = this.showWaveform
       ? computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel)
       : undefined;
+    this.waveformPeaksWidth = this.waveformPeaks ? width : 0;
     this.layoutAndRender();
 
     if (this.showSpectrogram) {
@@ -631,7 +639,7 @@ export class Wavegram extends HTMLElement {
     const samples = pickChannel(this.audioBuffer, this.channel);
     const request: SpectrogramWorkerRequest = {
       samples,
-      sampleRate: this.audioBuffer.sampleRate,
+      sampleRate: this.sourceSampleRate ?? this.audioBuffer.sampleRate,
       fftSize: this.fftSize,
       hopSize: this.hopSize,
       windowType: this.windowType,
@@ -640,7 +648,7 @@ export class Wavegram extends HTMLElement {
     };
 
     if (typeof Worker === "undefined") {
-      return Promise.resolve(computeSpectrogram(samples, this.audioBuffer.sampleRate, request));
+      return Promise.resolve(computeSpectrogram(samples, request.sampleRate, request));
     }
 
     return new Promise((resolve, reject) => {
@@ -671,6 +679,17 @@ export class Wavegram extends HTMLElement {
     this.audio.addEventListener("pause", this.handleAudioPause);
     this.audio.addEventListener("ended", this.handleAudioPause);
     this.audio.addEventListener("error", () => this.handleError("Audio playback failed.", this.audio?.error));
+  }
+
+  private handleResize(): void {
+    const width = Math.max(1, Math.floor(this.getCanvasWidth()));
+    if (this.audioBuffer && this.showWaveform && width !== this.waveformPeaksWidth) {
+      this.waveformPeaks = computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel);
+      this.waveformPeaksWidth = width;
+    } else if (!this.showWaveform) {
+      this.waveformPeaksWidth = 0;
+    }
+    this.layoutAndRender();
   }
 
   private layoutAndRender(): void {
@@ -739,7 +758,13 @@ export class Wavegram extends HTMLElement {
 
   private clearCursor(canvas: HTMLCanvasElement): void {
     const context = canvas.getContext("2d");
-    context?.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    if (!context) return;
+    const transform = typeof context.getTransform === "function" ? context.getTransform() : undefined;
+    const scaleX = Math.abs(transform?.a ?? 1) || 1;
+    const scaleY = Math.abs(transform?.d ?? 1) || 1;
+    const width = Math.max(canvas.clientWidth, canvas.width / scaleX);
+    const height = Math.max(canvas.clientHeight, canvas.height / scaleY);
+    context.clearRect(0, 0, width, height);
   }
 
   private drawSpectrogramOverlay(): void {

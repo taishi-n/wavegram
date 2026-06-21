@@ -178,4 +178,31 @@ describe("wavegram-player component", () => {
     player.setAttribute("show-waveform", "false");
     expect(spectrogram.style.height).toBe("300px");
   });
+
+  it("recomputes waveform peaks when the host width changes", () => {
+    const player = document.createElement("wavegram-player") as HTMLElement & {
+      audioBuffer?: AudioBuffer;
+      waveformPeaks?: { min: Float32Array; max: Float32Array };
+      handleResize: () => void;
+    };
+    let width = 320;
+    Object.defineProperty(player, "clientWidth", { get: () => width });
+    document.body.append(player);
+    player.audioBuffer = {
+      duration: 1,
+      length: 640,
+      numberOfChannels: 1,
+      sampleRate: 16000,
+      copyFromChannel: vi.fn(),
+      copyToChannel: vi.fn(),
+      getChannelData: () => new Float32Array(640),
+    } as AudioBuffer;
+
+    player.handleResize();
+    expect(player.waveformPeaks?.max.length).toBe(320);
+
+    width = 480;
+    player.handleResize();
+    expect(player.waveformPeaks?.max.length).toBe(480);
+  });
 });

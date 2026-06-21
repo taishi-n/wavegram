@@ -13,6 +13,7 @@ export type SpectrogramData = {
   freqBins: number;
   timeFrames: number;
   sampleRate: number;
+  maxFrequencyHz: number;
   fftSize: number;
   hopSize: number;
   minDb: number;

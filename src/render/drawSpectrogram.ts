@@ -46,7 +46,7 @@ export function drawSpectrogram(
   }
 
   context.putImageData(image, 0, 0);
-  drawFrequencyTicks(context, cssWidth, cssHeight, spectrogram.sampleRate, options.tickColor);
+  drawFrequencyTicks(context, cssWidth, cssHeight, spectrogram.maxFrequencyHz, options.tickColor);
 }
 
 export function chooseFrequencyTickStep(nyquistHz: number, height: number): number {
@@ -63,11 +63,10 @@ function drawFrequencyTicks(
   context: CanvasRenderingContext2D,
   width: number,
   height: number,
-  sampleRate: number,
+  maxFrequencyHz: number,
   tickColor = "rgba(255, 255, 255, 0.42)",
 ): void {
-  const nyquistHz = sampleRate / 2;
-  const step = chooseFrequencyTickStep(nyquistHz, height);
+  const step = chooseFrequencyTickStep(maxFrequencyHz, height);
   const labelPadding = 5;
 
   context.save();
@@ -78,14 +77,20 @@ function drawFrequencyTicks(
   context.textAlign = "left";
   context.textBaseline = "middle";
 
-  for (let hz = step; hz < nyquistHz; hz += step) {
-    const y = height - (hz / nyquistHz) * height;
+  for (let hz = step; hz < maxFrequencyHz; hz += step) {
+    const y = height - (hz / maxFrequencyHz) * height;
     context.beginPath();
     context.moveTo(0, y + 0.5);
     context.lineTo(width, y + 0.5);
     context.stroke();
     context.fillText(formatFrequencyTick(hz), labelPadding, y);
   }
+
+  context.beginPath();
+  context.moveTo(0, 0.5);
+  context.lineTo(width, 0.5);
+  context.stroke();
+  context.fillText(formatFrequencyTick(maxFrequencyHz), labelPadding, 8);
 
   context.restore();
 }

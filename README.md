@@ -144,6 +144,8 @@ The older `<audio-preview-spectrogram>` tag is still registered as a compatibili
 
 The examples use WAV files from [`pdx-cs-sound/wavs`](https://github.com/pdx-cs-sound/wavs), a sample collection for Portland State University's Computers, Sound and Music course. The repository states that the files are Creative Commons CC0 unless otherwise indicated.
 
+The 16 kHz keyword-spotting example uses a WAV file from [`fkuhne/KWS-Dataset`](https://github.com/fkuhne/KWS-Dataset). Its `wavs` directory is described by that project as WAV audio converted to 16 kHz and is distributed under CC0-1.0.
+
 ## Styling
 
 The component uses Shadow DOM and supports CSS custom properties:
@@ -182,16 +184,32 @@ npm run test:e2e
 
 ## Examples
 
-Run `npm run dev` and open:
+Run the local dev server:
 
-- `examples/basic.html`
-- `examples/multiple.html`
-- `examples/large-file.html`
-- `examples/profile.html`
-- `examples/multichannel.html`
-- `examples/waveform-only.html`
-- `examples/spectrogram-only.html`
-- `examples/styles.html`
+```sh
+npm run dev -- --port 4173
+```
+
+Then open:
+
+- `http://127.0.0.1:4173/examples/basic.html`
+- `http://127.0.0.1:4173/examples/multiple.html`
+- `http://127.0.0.1:4173/examples/large-file.html`
+- `http://127.0.0.1:4173/examples/profile.html`
+- `http://127.0.0.1:4173/examples/multichannel.html`
+- `http://127.0.0.1:4173/examples/kws-16khz.html`
+- `http://127.0.0.1:4173/examples/waveform-only.html`
+- `http://127.0.0.1:4173/examples/spectrogram-only.html`
+- `http://127.0.0.1:4173/examples/styles.html`
+
+For automated local checks, run:
+
+```sh
+npm run test
+npm run typecheck
+npm run build
+npm run test:e2e
+```
 
 ## License
 

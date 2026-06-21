@@ -129,5 +129,5 @@ export function computeSpectrogram(
     }
   }
 
-  return { values, freqBins, timeFrames, sampleRate, fftSize, hopSize, minDb, maxDb };
+  return { values, freqBins, timeFrames, sampleRate, maxFrequencyHz: sampleRate / 2, fftSize, hopSize, minDb, maxDb };
 }

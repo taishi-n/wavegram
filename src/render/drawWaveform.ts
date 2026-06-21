@@ -18,8 +18,7 @@ export function drawWaveform(
   const context = canvas.getContext("2d");
   if (!context) return;
 
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  const { width, height } = getLogicalCanvasSize(canvas, context);
   const center = height / 2;
   context.clearRect(0, 0, width, height);
   context.fillStyle = options.background;
@@ -51,6 +50,23 @@ export function drawWaveform(
   } else {
     drawBars(context, amplitudes, width, height, options.color, barWidth, barSpacing);
   }
+}
+
+function getLogicalCanvasSize(
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+): { width: number; height: number } {
+  if (typeof context.getTransform !== "function") {
+    return { width: canvas.clientWidth, height: canvas.clientHeight };
+  }
+
+  const transform = context.getTransform();
+  const scaleX = Math.abs(transform.a) || 1;
+  const scaleY = Math.abs(transform.d) || 1;
+  return {
+    width: Math.max(canvas.clientWidth, canvas.width / scaleX),
+    height: Math.max(canvas.clientHeight, canvas.height / scaleY),
+  };
 }
 
 function amplitudeAt(peaks: WaveformPeaks, x: number): number {
