@@ -2,18 +2,20 @@
 
 Lightweight Web Component for previewing audio with a synchronized waveform, spectrogram, and playback cursor. It is intended for research demos, paper companion pages, audio dataset previews, and source-separation result comparisons.
 
+Wavegram aims to provide a minimal, academic, and scientific visualization surface rather than a general-purpose media player or audio editor.
+
 It is not an editor. It does not implement recording, effects, multitrack editing, annotation editing, ASR, or server-side processing.
 
 ## Design Focus
 
-Wavegram is closest in spirit to lightweight waveform players such as wavesurfer.js, but its primary view is not just a waveform. It always treats waveform and spectrogram as two synchronized views over the same audio timeline.
+Wavegram is closest in spirit to lightweight waveform players, but its primary view is not just a waveform. It always treats waveform and spectrogram as two synchronized views over the same audio timeline.
 
 The core feature set is deliberately narrow:
 
 - Simultaneous waveform and spectrogram display.
 - One playback cursor rendered at the same time position in both views.
 - Click-to-seek from either waveform or spectrogram. By default, clicking a stopped player starts playback from that position, and clicking a playing player pauses after seeking.
-- Scientific, low-decoration presentation suitable for papers, demos, and dataset browsers.
+- Minimal, low-decoration presentation suitable for academic papers, scientific demos, and dataset browsers.
 - No DAW-style editing, multitrack arrangement, effects, recording, or annotation workflow.
 
 ## Install
@@ -33,6 +35,8 @@ import "wavegram";
   src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
 ></wavegram-player>
 ```
+
+![Minimal wavegram-player example showing a waveform and spectrogram](docs/assets/minimal-example.png)
 
 The package is named `wavegram`. The custom element tag is `wavegram-player` because browser custom element names must contain a hyphen.
 
@@ -145,6 +149,10 @@ The older `<audio-preview-spectrogram>` tag is still registered as a compatibili
 The examples use WAV files from [`pdx-cs-sound/wavs`](https://github.com/pdx-cs-sound/wavs), a sample collection for Portland State University's Computers, Sound and Music course. The repository states that the files are Creative Commons CC0 unless otherwise indicated.
 
 The 16 kHz keyword-spotting example uses a WAV file from [`fkuhne/KWS-Dataset`](https://github.com/fkuhne/KWS-Dataset). Its `wavs` directory is described by that project as WAV audio converted to 16 kHz and is distributed under CC0-1.0.
+
+## Acknowledgements
+
+Wavegram is inspired by [`wavesurfer.js`](https://wavesurfer.xyz/), especially its lightweight browser-based waveform player model. Wavegram is an independent implementation focused on synchronized waveform and spectrogram previews for research demos and dataset browsing.
 
 ## Styling
 
