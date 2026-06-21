@@ -4,6 +4,23 @@
   "description": "Lightweight waveform and spectrogram Web Component for audio previews.",
   "type": "module",
   "license": "MIT",
+  "author": "taishi-n",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taishi-n/wavegram.git"
+  },
+  "homepage": "https://github.com/taishi-n/wavegram#readme",
+  "bugs": {
+    "url": "https://github.com/taishi-n/wavegram/issues"
+  },
+  "keywords": [
+    "audio",
+    "waveform",
+    "spectrogram",
+    "web-component",
+    "canvas",
+    "web-audio"
+  ],
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
