@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wavegram - Multichannel WAV</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+      body {
+        margin: 24px;
+        font-family: system-ui, sans-serif;
+      }
+      main {
+        display: grid;
+        gap: 18px;
+        max-width: 900px;
+      }
+      h2 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2>Mix</h2>
+        <wavegram-player src="./stereo-tone.wav" channel="mix"></wavegram-player>
+      </section>
+      <section>
+        <h2>Channel 0</h2>
+        <wavegram-player src="./stereo-tone.wav" channel="0"></wavegram-player>
+      </section>
+      <section>
+        <h2>Channel 1</h2>
+        <wavegram-player src="./stereo-tone.wav" channel="1"></wavegram-player>
+      </section>
+    </main>
+  </body>
+</html>

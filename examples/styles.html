@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wavegram - Waveform Styles</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+      body {
+        margin: 24px;
+        font-family: system-ui, sans-serif;
+        background: #f5f6f8;
+        color: #1d2329;
+      }
+      main {
+        display: grid;
+        gap: 16px;
+        max-width: 960px;
+      }
+      section {
+        padding: 0;
+      }
+      h2 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        font-weight: 650;
+      }
+      wavegram-player {
+        --ap-bg: #101114;
+        --ap-fg: #f4f4f5;
+        --ap-waveform-bg: rgba(255, 255, 255, 0.03);
+        --ap-waveform: rgba(255, 255, 255, 0.34);
+        --ap-waveform-center: rgba(255, 255, 255, 0.04);
+        --ap-waveform-progress: rgba(255, 255, 255, 0.92);
+        --ap-cursor: #a855f7;
+        --ap-border: rgba(255, 255, 255, 0.11);
+        max-width: 900px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2>Bars</h2>
+        <wavegram-player
+          src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+          show-spectrogram="false"
+          waveform-style="bars"
+          waveform-bar-width="4"
+          waveform-bar-spacing="1"
+          waveform-height="96"
+        ></wavegram-player>
+      </section>
+      <section>
+        <h2>Lines</h2>
+        <wavegram-player
+          src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+          show-spectrogram="false"
+          waveform-style="lines"
+          waveform-height="96"
+        ></wavegram-player>
+      </section>
+      <section>
+        <h2>Blocks</h2>
+        <wavegram-player
+          src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+          show-spectrogram="false"
+          waveform-style="blocks"
+          waveform-bar-width="3"
+          waveform-bar-spacing="1"
+          waveform-height="96"
+        ></wavegram-player>
+      </section>
+      <section>
+        <h2>Dots</h2>
+        <wavegram-player
+          src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+          show-spectrogram="false"
+          waveform-style="dots"
+          waveform-bar-width="2"
+          waveform-bar-spacing="2"
+          waveform-height="96"
+        ></wavegram-player>
+      </section>
+    </main>
+  </body>
+</html>
