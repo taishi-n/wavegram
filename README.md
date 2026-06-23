@@ -61,9 +61,6 @@ document.body.appendChild(player);
 | `show-spectrogram` | `showSpectrogram` | `true` | Show spectrogram pane. |
 | `show-controls` | `showControls` | `false` | Show the play/pause button. |
 | `show-time` | `showTime` | `false` | Show current time and duration. |
-| `waveform-style` | `waveformStyle` | `waveform` | `waveform`, `bars`, `lines`, `blocks`, or `dots`. `line` is accepted as a legacy alias. |
-| `waveform-bar-width` | `waveformBarWidth` | style-dependent | Width of bars, blocks, or dots in CSS pixels. |
-| `waveform-bar-spacing` | `waveformBarSpacing` | style-dependent | Spacing between bars, blocks, or dots in CSS pixels. |
 | `autoplay` | `autoplay` | `false` | Start playback after loading. Browser autoplay policies still apply. |
 | `fft-size` | `fftSize` | `1024` | Radix-2 FFT size. Non-power-of-two values are errors. |
 | `hop-size` | `hopSize` | `256` | STFT hop size in samples. |

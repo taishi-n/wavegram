@@ -20,6 +20,5 @@ export type {
   SpectrogramData,
   SpectrogramOptions,
   WaveformPeaks,
-  WaveformStyle,
   WindowType,
 } from "./types";

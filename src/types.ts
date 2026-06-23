@@ -1,7 +1,6 @@
 export type WindowType = "hann" | "hamming" | "rectangular";
 export type ColorMapName = "audition" | "gray" | "magma" | "viridis" | "inferno";
 export type ChannelSelection = number | "mix" | "all";
-export type WaveformStyle = "waveform" | "bars" | "lines" | "blocks" | "dots";
 
 export type WaveformPeaks = {
   min: Float32Array;

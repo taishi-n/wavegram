@@ -149,22 +149,6 @@ describe("wavegram-player component", () => {
     expect(player.shadowRoot!.querySelector(".time")!.classList.contains("hidden")).toBe(false);
   });
 
-  it("uses normal waveform as the default style and normalizes style aliases", () => {
-    const player = document.createElement("wavegram-player") as HTMLElement & { waveformStyle: string };
-    document.body.append(player);
-
-    expect(player.waveformStyle).toBe("waveform");
-
-    player.setAttribute("waveform-style", "line");
-    expect(player.waveformStyle).toBe("lines");
-
-    player.setAttribute("waveform-style", "mirror");
-    expect(player.waveformStyle).toBe("waveform");
-
-    player.setAttribute("waveform-style", "blocks");
-    expect(player.waveformStyle).toBe("blocks");
-  });
-
   it("uses magma as the default color map and accepts legacy audition", () => {
     const player = document.createElement("wavegram-player") as HTMLElement & { colorMap: string };
     document.body.append(player);

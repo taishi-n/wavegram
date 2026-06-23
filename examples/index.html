@@ -96,17 +96,6 @@
         width: 100%;
       }
 
-      .styled-player {
-        --ap-bg: #101114;
-        --ap-fg: #f4f4f5;
-        --ap-waveform-bg: rgba(255, 255, 255, 0.03);
-        --ap-waveform: rgba(255, 255, 255, 0.34);
-        --ap-waveform-center: rgba(255, 255, 255, 0.04);
-        --ap-waveform-progress: rgba(255, 255, 255, 0.92);
-        --ap-cursor: #a855f7;
-        --ap-border: rgba(255, 255, 255, 0.11);
-      }
-
       pre {
         margin: 0;
         padding: 14px;
@@ -333,94 +322,6 @@
           <pre><code>&lt;wavegram-player
   show-time
   src="https://raw.githubusercontent.com/fkuhne/KWS-Dataset/main/wavs/azul/azul_049790d02893494f8d9950c4f68cd722.wav"
-&gt;&lt;/wavegram-player&gt;</code></pre>
-        </div>
-      </section>
-
-      <section>
-        <h2>Waveform Styles</h2>
-        <p class="description">Set <code>waveform-style</code> and bar sizing attributes for compact waveform-only views.</p>
-        <div class="demo-grid">
-          <div class="demo-stack">
-            <div class="demo-item">
-              <p class="demo-label">Bars</p>
-              <wavegram-player
-                class="styled-player"
-                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-                show-spectrogram="false"
-                waveform-style="bars"
-                waveform-bar-width="4"
-                waveform-bar-spacing="1"
-                waveform-height="96"
-              ></wavegram-player>
-            </div>
-            <div class="demo-item">
-              <p class="demo-label">Lines</p>
-              <wavegram-player
-                class="styled-player"
-                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-                show-spectrogram="false"
-                waveform-style="lines"
-                waveform-height="96"
-              ></wavegram-player>
-            </div>
-            <div class="demo-item">
-              <p class="demo-label">Blocks</p>
-              <wavegram-player
-                class="styled-player"
-                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-                show-spectrogram="false"
-                waveform-style="blocks"
-                waveform-bar-width="3"
-                waveform-bar-spacing="1"
-                waveform-height="96"
-              ></wavegram-player>
-            </div>
-            <div class="demo-item">
-              <p class="demo-label">Dots</p>
-              <wavegram-player
-                class="styled-player"
-                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-                show-spectrogram="false"
-                waveform-style="dots"
-                waveform-bar-width="2"
-                waveform-bar-spacing="2"
-                waveform-height="96"
-              ></wavegram-player>
-            </div>
-          </div>
-          <pre><code>&lt;wavegram-player
-  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-  show-spectrogram="false"
-  waveform-style="bars"
-  waveform-bar-width="4"
-  waveform-bar-spacing="1"
-  waveform-height="96"
-&gt;&lt;/wavegram-player&gt;
-
-&lt;wavegram-player
-  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-  show-spectrogram="false"
-  waveform-style="lines"
-  waveform-height="96"
-&gt;&lt;/wavegram-player&gt;
-
-&lt;wavegram-player
-  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-  show-spectrogram="false"
-  waveform-style="blocks"
-  waveform-bar-width="3"
-  waveform-bar-spacing="1"
-  waveform-height="96"
-&gt;&lt;/wavegram-player&gt;
-
-&lt;wavegram-player
-  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-  show-spectrogram="false"
-  waveform-style="dots"
-  waveform-bar-width="2"
-  waveform-bar-spacing="2"
-  waveform-height="96"
 &gt;&lt;/wavegram-player&gt;</code></pre>
         </div>
       </section>

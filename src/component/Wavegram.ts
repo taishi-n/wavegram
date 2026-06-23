@@ -18,7 +18,6 @@ import type {
   SpectrogramData,
   SpectrogramWorkerRequest,
   WaveformPeaks,
-  WaveformStyle,
   WindowType,
 } from "../types";
 import { formatTime } from "../utils/formatTime";
@@ -227,9 +226,6 @@ export class Wavegram extends HTMLElement {
     "show-spectrogram",
     "show-controls",
     "show-time",
-    "waveform-style",
-    "waveform-bar-width",
-    "waveform-bar-spacing",
     "autoplay",
     "fft-size",
     "hop-size",
@@ -353,34 +349,6 @@ export class Wavegram extends HTMLElement {
 
   set showTime(value: boolean) {
     this.setBooleanAttribute("show-time", value);
-  }
-
-  get waveformStyle(): WaveformStyle {
-    const value = this.getAttribute("waveform-style");
-    if (value === "line") return "lines";
-    if (value === "waveform") return "waveform";
-    if (value === "bars" || value === "lines" || value === "blocks" || value === "dots") return value;
-    return "waveform";
-  }
-
-  set waveformStyle(value: WaveformStyle) {
-    this.setAttribute("waveform-style", value);
-  }
-
-  get waveformBarWidth(): number | undefined {
-    return this.getOptionalNumberAttribute("waveform-bar-width");
-  }
-
-  set waveformBarWidth(value: number) {
-    this.setAttribute("waveform-bar-width", String(value));
-  }
-
-  get waveformBarSpacing(): number | undefined {
-    return this.getOptionalNumberAttribute("waveform-bar-spacing");
-  }
-
-  set waveformBarSpacing(value: number) {
-    this.setAttribute("waveform-bar-spacing", String(value));
   }
 
   get autoplay(): boolean {
@@ -721,9 +689,6 @@ export class Wavegram extends HTMLElement {
         centerColor: this.cssVar("--ap-waveform-center", "rgba(0, 92, 58, 0.7)"),
         progressColor: this.cssVar("--ap-waveform-progress", "#00f0b5"),
         background: this.cssVar("--ap-waveform-bg", "#020604"),
-        style: this.waveformStyle,
-        barWidth: this.waveformBarWidth,
-        barSpacing: this.waveformBarSpacing,
         progress: this.playbackProgress,
       });
     }
@@ -746,16 +711,13 @@ export class Wavegram extends HTMLElement {
     const duration = this.duration;
     const color = this.cssVar("--ap-cursor", "#ff0000");
     const shadowColor = this.cssVar("--ap-cursor-shadow", "rgba(0, 0, 0, 0.45)");
-    if (this.showWaveform && this.waveformStyle === "waveform") {
+    if (this.showWaveform) {
       drawWaveform(this.waveformCanvas, this.waveformPeaks, {
         color: this.cssVar("--ap-waveform", "rgba(0, 214, 163, 0.34)"),
         playedColor: this.cssVar("--ap-waveform-played", "#00f0b5"),
         centerColor: this.cssVar("--ap-waveform-center", "rgba(0, 92, 58, 0.7)"),
         progressColor: this.cssVar("--ap-waveform-progress", "#00f0b5"),
         background: this.cssVar("--ap-waveform-bg", "#020604"),
-        style: this.waveformStyle,
-        barWidth: this.waveformBarWidth,
-        barSpacing: this.waveformBarSpacing,
         progress: this.playbackProgress,
       });
     }
@@ -966,12 +928,6 @@ export class Wavegram extends HTMLElement {
   private getNumberAttribute(name: string, fallback: number): number {
     const value = Number(this.getAttribute(name));
     return Number.isFinite(value) && value > 0 ? value : fallback;
-  }
-
-  private getOptionalNumberAttribute(name: string): number | undefined {
-    if (!this.hasAttribute(name)) return undefined;
-    const value = Number(this.getAttribute(name));
-    return Number.isFinite(value) && value > 0 ? value : undefined;
   }
 
   private getBooleanAttribute(name: string, fallback: boolean): boolean {

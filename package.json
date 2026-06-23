@@ -1,6 +1,6 @@
 {
   "name": "wavegram",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Lightweight waveform and spectrogram Web Component for audio previews.",
   "type": "module",
   "license": "MIT",
