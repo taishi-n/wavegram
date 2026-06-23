@@ -200,15 +200,7 @@ npm run dev -- --port 4173
 
 Then open:
 
-- `http://127.0.0.1:4173/examples/basic.html`
-- `http://127.0.0.1:4173/examples/multiple.html`
-- `http://127.0.0.1:4173/examples/large-file.html`
-- `http://127.0.0.1:4173/examples/profile.html`
-- `http://127.0.0.1:4173/examples/multichannel.html`
-- `http://127.0.0.1:4173/examples/kws-16khz.html`
-- `http://127.0.0.1:4173/examples/waveform-only.html`
-- `http://127.0.0.1:4173/examples/spectrogram-only.html`
-- `http://127.0.0.1:4173/examples/styles.html`
+- `http://127.0.0.1:4173/examples/index.html`
 
 For automated local checks, run:
 

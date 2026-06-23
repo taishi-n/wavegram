@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wavegram Examples</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+      :root {
+        color: #1f252b;
+        background: #f6f7f9;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      header {
+        padding: 32px 24px 18px;
+        border-bottom: 1px solid #d9dee5;
+        background: #ffffff;
+      }
+
+      header > div,
+      main {
+        width: min(1120px, calc(100vw - 48px));
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        line-height: 1.15;
+      }
+
+      header p {
+        max-width: 760px;
+        margin: 0;
+        color: #57616c;
+        line-height: 1.55;
+      }
+
+      main {
+        display: grid;
+        gap: 28px;
+        padding: 28px 0 48px;
+      }
+
+      section {
+        display: grid;
+        gap: 12px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.3;
+      }
+
+      .description {
+        margin: 0;
+        color: #57616c;
+        line-height: 1.5;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .demo-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .demo-item {
+        display: grid;
+        gap: 6px;
+      }
+
+      .demo-label {
+        margin: 0;
+        color: #303842;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      wavegram-player {
+        width: 100%;
+      }
+
+      .styled-player {
+        --ap-bg: #101114;
+        --ap-fg: #f4f4f5;
+        --ap-waveform-bg: rgba(255, 255, 255, 0.03);
+        --ap-waveform: rgba(255, 255, 255, 0.34);
+        --ap-waveform-center: rgba(255, 255, 255, 0.04);
+        --ap-waveform-progress: rgba(255, 255, 255, 0.92);
+        --ap-cursor: #a855f7;
+        --ap-border: rgba(255, 255, 255, 0.11);
+      }
+
+      pre {
+        margin: 0;
+        padding: 14px;
+        border: 1px solid #d9dee5;
+        background: #ffffff;
+        color: #1f252b;
+        overflow: auto;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+
+      .profile-output {
+        min-height: 72px;
+        max-height: 220px;
+      }
+
+      @media (max-width: 840px) {
+        header > div,
+        main {
+          width: min(100% - 32px, 1120px);
+        }
+
+        .demo-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Wavegram Examples</h1>
+        <p>
+          A single page with common <code>wavegram-player</code> configurations and the HTML needed to reproduce each one.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>Basic Player</h2>
+        <p class="description">Default waveform, spectrogram, controls, and time display.</p>
+        <div class="demo-grid">
+          <wavegram-player
+            src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+          ></wavegram-player>
+          <pre><code>&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Multiple Players</h2>
+        <p class="description">Several players can be placed on the same page with independent audio sources.</p>
+        <div class="demo-grid">
+          <div class="demo-stack">
+            <div class="demo-item">
+              <p class="demo-label">voice.wav</p>
+              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">synth.wav</p>
+              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/synth.wav"></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">gc.wav</p>
+              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/gc.wav"></wavegram-player>
+            </div>
+          </div>
+          <pre><code>&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"&gt;&lt;/wavegram-player&gt;
+&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/synth.wav"&gt;&lt;/wavegram-player&gt;
+&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/gc.wav"&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Waveform Only</h2>
+        <p class="description">Hide the spectrogram and increase the waveform height.</p>
+        <div class="demo-grid">
+          <wavegram-player
+            src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+            show-spectrogram="false"
+            waveform-height="120"
+          ></wavegram-player>
+          <pre><code>&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-spectrogram="false"
+  waveform-height="120"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Spectrogram Only</h2>
+        <p class="description">Hide the waveform and allocate more vertical space to the spectrogram.</p>
+        <div class="demo-grid">
+          <wavegram-player
+            src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+            show-waveform="false"
+            spectrogram-height="180"
+          ></wavegram-player>
+          <pre><code>&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-waveform="false"
+  spectrogram-height="180"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Large-File Settings</h2>
+        <p class="description">Use larger FFT and hop sizes when a lower-detail spectrogram is acceptable.</p>
+        <div class="demo-grid">
+          <wavegram-player
+            src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+            fft-size="1024"
+            hop-size="512"
+          ></wavegram-player>
+          <pre><code>&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  fft-size="1024"
+  hop-size="512"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Multichannel WAV</h2>
+        <p class="description">Choose the mixed signal or a specific channel from a multichannel source.</p>
+        <div class="demo-grid">
+          <div class="demo-stack">
+            <div class="demo-item">
+              <p class="demo-label">Mix</p>
+              <wavegram-player src="./stereo-tone.wav" channel="mix"></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Channel 0</p>
+              <wavegram-player src="./stereo-tone.wav" channel="0"></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Channel 1</p>
+              <wavegram-player src="./stereo-tone.wav" channel="1"></wavegram-player>
+            </div>
+          </div>
+          <pre><code>&lt;wavegram-player src="./stereo-tone.wav" channel="mix"&gt;&lt;/wavegram-player&gt;
+&lt;wavegram-player src="./stereo-tone.wav" channel="0"&gt;&lt;/wavegram-player&gt;
+&lt;wavegram-player src="./stereo-tone.wav" channel="1"&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>16 kHz WAV</h2>
+        <p class="description">A keyword-spotting dataset sample with the time readout enabled.</p>
+        <div class="demo-grid">
+          <wavegram-player
+            show-time
+            src="https://raw.githubusercontent.com/fkuhne/KWS-Dataset/main/wavs/azul/azul_049790d02893494f8d9950c4f68cd722.wav"
+          ></wavegram-player>
+          <pre><code>&lt;wavegram-player
+  show-time
+  src="https://raw.githubusercontent.com/fkuhne/KWS-Dataset/main/wavs/azul/azul_049790d02893494f8d9950c4f68cd722.wav"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Waveform Styles</h2>
+        <p class="description">Set <code>waveform-style</code> and bar sizing attributes for compact waveform-only views.</p>
+        <div class="demo-grid">
+          <div class="demo-stack">
+            <div class="demo-item">
+              <p class="demo-label">Bars</p>
+              <wavegram-player
+                class="styled-player"
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-spectrogram="false"
+                waveform-style="bars"
+                waveform-bar-width="4"
+                waveform-bar-spacing="1"
+                waveform-height="96"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Lines</p>
+              <wavegram-player
+                class="styled-player"
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-spectrogram="false"
+                waveform-style="lines"
+                waveform-height="96"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Blocks</p>
+              <wavegram-player
+                class="styled-player"
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-spectrogram="false"
+                waveform-style="blocks"
+                waveform-bar-width="3"
+                waveform-bar-spacing="1"
+                waveform-height="96"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Dots</p>
+              <wavegram-player
+                class="styled-player"
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-spectrogram="false"
+                waveform-style="dots"
+                waveform-bar-width="2"
+                waveform-bar-spacing="2"
+                waveform-height="96"
+              ></wavegram-player>
+            </div>
+          </div>
+          <pre><code>&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-spectrogram="false"
+  waveform-style="bars"
+  waveform-bar-width="4"
+  waveform-bar-spacing="1"
+  waveform-height="96"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-spectrogram="false"
+  waveform-style="lines"
+  waveform-height="96"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-spectrogram="false"
+  waveform-style="blocks"
+  waveform-bar-width="3"
+  waveform-bar-spacing="1"
+  waveform-height="96"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-spectrogram="false"
+  waveform-style="dots"
+  waveform-bar-width="2"
+  waveform-bar-spacing="2"
+  waveform-height="96"
+&gt;&lt;/wavegram-player&gt;</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Profile Events</h2>
+        <p class="description">Listen for profiling events and render their details in your own UI.</p>
+        <div class="demo-grid">
+          <div class="demo-stack">
+            <wavegram-player
+              id="profile-player"
+              src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+              show-controls
+              show-time
+            ></wavegram-player>
+            <pre class="profile-output" id="profile-output" aria-live="polite"></pre>
+          </div>
+          <pre><code>&lt;wavegram-player
+  id="profile-player"
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-controls
+  show-time
+&gt;&lt;/wavegram-player&gt;
+&lt;pre id="profile-output"&gt;&lt;/pre&gt;
+
+&lt;script type="module"&gt;
+  const player = document.querySelector("#profile-player");
+  const output = document.querySelector("#profile-output");
+  const rows = [];
+
+  function record(name, detail) {
+    rows.push({ event: name, ...detail });
+    output.textContent = JSON.stringify(rows, null, 2);
+    console.table(rows);
+  }
+
+  player.addEventListener("profile", (event) =&gt; record("profile", event.detail));
+  player.addEventListener("playprofile", (event) =&gt; record("playprofile", event.detail));
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <script type="module">
+      const player = document.querySelector("#profile-player");
+      const output = document.querySelector("#profile-output");
+      const rows = [];
+
+      function record(name, detail) {
+        rows.push({ event: name, ...detail });
+        output.textContent = JSON.stringify(rows, null, 2);
+        console.table(rows);
+      }
+
+      player.addEventListener("profile", (event) => record("profile", event.detail));
+      player.addEventListener("playprofile", (event) => record("playprofile", event.detail));
+    </script>
+  </body>
+</html>

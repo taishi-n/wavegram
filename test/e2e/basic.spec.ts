@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("renders and seeks", async ({ page }) => {
-  await page.goto("/examples/basic.html");
+  await page.goto("/examples/index.html");
   const player = page.locator("wavegram-player").first();
   await expect(player).toBeVisible();
 

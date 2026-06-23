@@ -3,45 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wavegram - Profile</title>
-    <script type="module" src="../src/index.ts"></script>
-    <style>
-      body {
-        margin: 24px;
-        font-family: system-ui, sans-serif;
-      }
-      wavegram-player {
-        max-width: 900px;
-      }
-      pre {
-        margin-top: 16px;
-        padding: 12px;
-        border: 1px solid #ddd;
-        background: #f7f7f7;
-        overflow: auto;
-      }
-    </style>
+    <meta http-equiv="refresh" content="0; url=./index.html" />
+    <title>Wavegram Examples</title>
   </head>
   <body>
-    <wavegram-player
-      src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-      show-controls
-      show-time
-    ></wavegram-player>
-    <pre></pre>
-    <script type="module">
-      const player = document.querySelector("wavegram-player");
-      const output = document.querySelector("pre");
-      const rows = [];
-
-      function record(name, detail) {
-        rows.push({ event: name, ...detail });
-        output.textContent = JSON.stringify(rows, null, 2);
-        console.table(rows);
-      }
-
-      player.addEventListener("profile", (event) => record("profile", event.detail));
-      player.addEventListener("playprofile", (event) => record("playprofile", event.detail));
-    </script>
+    <p><a href="./index.html">Open the combined Wavegram examples.</a></p>
   </body>
 </html>

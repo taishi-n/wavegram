@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: "test/e2e",
   webServer: {
     command: "npm run dev -- --port 4173",
-    url: "http://127.0.0.1:4173/examples/basic.html",
+    url: "http://127.0.0.1:4173/examples/index.html",
     reuseExistingServer: true,
   },
   use: {
