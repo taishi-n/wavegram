@@ -165,6 +165,32 @@ describe("wavegram-player component", () => {
     expect(player.waveformStyle).toBe("blocks");
   });
 
+  it("uses magma as the default color map and accepts legacy audition", () => {
+    const player = document.createElement("wavegram-player") as HTMLElement & { colorMap: string };
+    document.body.append(player);
+
+    expect(player.colorMap).toBe("magma");
+
+    player.setAttribute("color-map", "audition");
+    expect(player.colorMap).toBe("audition");
+  });
+
+  it("shows all channels by default and accepts mix or numeric channels", () => {
+    const player = document.createElement("wavegram-player") as HTMLElement & { channel: string | number };
+    document.body.append(player);
+
+    expect(player.channel).toBe("all");
+
+    player.setAttribute("channel", "mix");
+    expect(player.channel).toBe("mix");
+
+    player.setAttribute("channel", "1");
+    expect(player.channel).toBe(1);
+
+    player.setAttribute("channel", "invalid");
+    expect(player.channel).toBe("all");
+  });
+
   it("allocates total height across visible panes when individual heights are not set", () => {
     const player = document.createElement("wavegram-player");
     player.setAttribute("height", "300");
@@ -182,7 +208,7 @@ describe("wavegram-player component", () => {
   it("recomputes waveform peaks when the host width changes", () => {
     const player = document.createElement("wavegram-player") as HTMLElement & {
       audioBuffer?: AudioBuffer;
-      waveformPeaks?: { min: Float32Array; max: Float32Array };
+      waveformPeaks?: { min: Float32Array; max: Float32Array }[];
       handleResize: () => void;
     };
     let width = 320;
@@ -199,10 +225,10 @@ describe("wavegram-player component", () => {
     } as AudioBuffer;
 
     player.handleResize();
-    expect(player.waveformPeaks?.max.length).toBe(320);
+    expect(player.waveformPeaks?.[0]?.max.length).toBe(320);
 
     width = 480;
     player.handleResize();
-    expect(player.waveformPeaks?.max.length).toBe(480);
+    expect(player.waveformPeaks?.[0]?.max.length).toBe(480);
   });
 });

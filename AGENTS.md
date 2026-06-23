@@ -9,7 +9,7 @@ Tests are under `test/`. Unit and component tests use Vitest in `test/*.test.ts`
 ## Build, Test, and Development Commands
 
 - `npm install`: install dependencies from `package-lock.json`.
-- `npm run dev`: start Vite on `127.0.0.1`; use pages such as `examples/basic.html` for manual checks.
+- `npm run dev`: start Vite on `127.0.0.1`; use pages such as `examples/index.html` for manual checks.
 - `npm run build`: type-check the build config, emit declarations, and create ES/UMD bundles in `dist/`.
 - `npm test`: run Vitest unit and component tests with `happy-dom`.
 - `npm run test:e2e`: run Playwright tests; the config starts `npm run dev -- --port 4173` when needed.

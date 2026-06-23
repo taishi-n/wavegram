@@ -70,8 +70,8 @@ document.body.appendChild(player);
 | `window-type` | `windowType` | `hann` | `hann`, `hamming`, or `rectangular`. |
 | `min-db` | `minDb` | `-80` | Lower display bound. |
 | `max-db` | `maxDb` | `0` | Upper display bound. |
-| `color-map` | `colorMap` | `audition` | `audition`, `gray`, `magma`, `viridis`, or `inferno`. |
-| `channel` | `channel` | `mix` | `mix` or zero-based channel index. |
+| `color-map` | `colorMap` | `magma` | `audition`, `gray`, `magma`, `viridis`, or `inferno`. |
+| `channel` | `channel` | `all` | `all`, `mix`, or zero-based channel index. Omit this to show all channels vertically. |
 
 ## Events
 

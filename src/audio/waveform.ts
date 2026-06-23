@@ -1,5 +1,5 @@
 import type { WaveformPeaks } from "../types";
-import { pickChannel } from "../utils/resample";
+import { pickChannel, pickChannels } from "../utils/resample";
 
 export function computeWaveformPeaks(samples: Float32Array, width: number): WaveformPeaks {
   const columns = Math.max(1, Math.floor(width));
@@ -32,4 +32,12 @@ export function computeWaveformPeaksFromBuffer(
   channel: number | "mix",
 ): WaveformPeaks {
   return computeWaveformPeaks(pickChannel(buffer, channel), width);
+}
+
+export function computeWaveformPeaksForChannelsFromBuffer(
+  buffer: AudioBuffer,
+  width: number,
+  channel: number | "mix" | "all",
+): WaveformPeaks[] {
+  return pickChannels(buffer, channel).map((samples) => computeWaveformPeaks(samples, width));
 }

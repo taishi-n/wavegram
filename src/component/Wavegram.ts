@@ -3,7 +3,7 @@ import { loadAudio } from "../audio/loadAudio";
 import { createAudioElement } from "../audio/playback";
 import { readAudioFileSampleRate } from "../audio/readAudioSampleRate";
 import { computeSpectrogram } from "../audio/spectrogram";
-import { computeWaveformPeaksFromBuffer } from "../audio/waveform";
+import { computeWaveformPeaksForChannelsFromBuffer } from "../audio/waveform";
 import { configureCanvas } from "../render/canvas";
 import { drawCursor } from "../render/drawCursor";
 import { drawSpectrogram } from "../render/drawSpectrogram";
@@ -22,7 +22,7 @@ import type {
   WindowType,
 } from "../types";
 import { formatTime } from "../utils/formatTime";
-import { pickChannel } from "../utils/resample";
+import { pickChannels } from "../utils/resample";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -243,8 +243,8 @@ export class Wavegram extends HTMLElement {
   private audio?: HTMLAudioElement;
   private audioBuffer?: AudioBuffer;
   private sourceSampleRate?: number;
-  private waveformPeaks?: WaveformPeaks;
-  private spectrogram?: SpectrogramData;
+  private waveformPeaks?: WaveformPeaks[];
+  private spectrogram?: SpectrogramData[];
   private worker?: Worker;
   private resizeObserver?: ResizeObserver;
   private animationFrame = 0;
@@ -434,8 +434,10 @@ export class Wavegram extends HTMLElement {
 
   get colorMap(): ColorMapName {
     const value = this.getAttribute("color-map");
-    if (value === "gray" || value === "magma" || value === "viridis" || value === "inferno") return value;
-    return "audition";
+    if (value === "audition" || value === "gray" || value === "magma" || value === "viridis" || value === "inferno") {
+      return value;
+    }
+    return "magma";
   }
 
   set colorMap(value: ColorMapName) {
@@ -444,9 +446,10 @@ export class Wavegram extends HTMLElement {
 
   get channel(): ChannelSelection {
     const value = this.getAttribute("channel");
-    if (!value || value === "mix") return "mix";
+    if (!value) return "all";
+    if (value === "mix" || value === "all") return value;
     const numberValue = Number(value);
-    return Number.isInteger(numberValue) ? numberValue : "mix";
+    return Number.isInteger(numberValue) ? numberValue : "all";
   }
 
   set channel(value: ChannelSelection) {
@@ -537,7 +540,7 @@ export class Wavegram extends HTMLElement {
       const width = Math.max(1, Math.floor(this.getCanvasWidth()));
       const waveformStartedAt = performance.now();
       this.waveformPeaks = this.showWaveform
-        ? computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel)
+        ? computeWaveformPeaksForChannelsFromBuffer(this.audioBuffer, width, this.channel)
         : undefined;
       this.waveformPeaksWidth = this.waveformPeaks ? width : 0;
       const waveformDoneAt = performance.now();
@@ -575,7 +578,7 @@ export class Wavegram extends HTMLElement {
     if (!this.audioBuffer) return;
     const width = Math.max(1, Math.floor(this.getCanvasWidth()));
     this.waveformPeaks = this.showWaveform
-      ? computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel)
+      ? computeWaveformPeaksForChannelsFromBuffer(this.audioBuffer, width, this.channel)
       : undefined;
     this.waveformPeaksWidth = this.waveformPeaks ? width : 0;
     this.layoutAndRender();
@@ -634,19 +637,26 @@ export class Wavegram extends HTMLElement {
     }
   }
 
-  private computeSpectrogramInWorker(): Promise<SpectrogramData | undefined> {
+  private async computeSpectrogramInWorker(): Promise<SpectrogramData[] | undefined> {
     if (!this.audioBuffer) return Promise.resolve(undefined);
-    const samples = pickChannel(this.audioBuffer, this.channel);
+    const sampleRate = this.sourceSampleRate ?? this.audioBuffer.sampleRate;
+    const spectrograms: SpectrogramData[] = [];
+    for (const samples of pickChannels(this.audioBuffer, this.channel)) {
+      spectrograms.push(await this.computeSpectrogramForSamples(samples, sampleRate));
+    }
+    return spectrograms;
+  }
+
+  private computeSpectrogramForSamples(samples: Float32Array, sampleRate: number): Promise<SpectrogramData> {
     const request: SpectrogramWorkerRequest = {
       samples,
-      sampleRate: this.sourceSampleRate ?? this.audioBuffer.sampleRate,
+      sampleRate,
       fftSize: this.fftSize,
       hopSize: this.hopSize,
       windowType: this.windowType,
       minDb: this.minDb,
       maxDb: this.maxDb,
     };
-
     if (typeof Worker === "undefined") {
       return Promise.resolve(computeSpectrogram(samples, request.sampleRate, request));
     }
@@ -684,7 +694,7 @@ export class Wavegram extends HTMLElement {
   private handleResize(): void {
     const width = Math.max(1, Math.floor(this.getCanvasWidth()));
     if (this.audioBuffer && this.showWaveform && width !== this.waveformPeaksWidth) {
-      this.waveformPeaks = computeWaveformPeaksFromBuffer(this.audioBuffer, width, this.channel);
+      this.waveformPeaks = computeWaveformPeaksForChannelsFromBuffer(this.audioBuffer, width, this.channel);
       this.waveformPeaksWidth = width;
     } else if (!this.showWaveform) {
       this.waveformPeaksWidth = 0;

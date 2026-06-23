@@ -4,7 +4,7 @@ import { colorMap } from "./colorMap";
 
 export function drawSpectrogram(
   canvas: HTMLCanvasElement,
-  spectrogram: SpectrogramData | undefined,
+  spectrogram: SpectrogramData | SpectrogramData[] | undefined,
   options: {
     colorMap: ColorMapName;
     background: string;
@@ -23,7 +23,49 @@ export function drawSpectrogram(
   context.fillStyle = options.background;
   context.fillRect(0, 0, cssWidth, cssHeight);
   if (!spectrogram) return;
+  const lanes = Array.isArray(spectrogram) ? spectrogram : [spectrogram];
+  if (lanes.length === 0) return;
 
+  if (lanes.length > 1) {
+    const cssLaneHeight = cssHeight / lanes.length;
+    const pixelLaneHeight = Math.max(1, Math.floor(pixelHeight / lanes.length));
+    for (let index = 0; index < lanes.length; index += 1) {
+      const pixelY = index * pixelLaneHeight;
+      const lanePixelHeight = index === lanes.length - 1 ? pixelHeight - pixelY : pixelLaneHeight;
+      const cssY = index * cssLaneHeight;
+      drawSpectrogramLane(context, lanes[index]!, pixelWidth, lanePixelHeight, pixelY, options);
+      drawFrequencyTicks(context, cssWidth, cssLaneHeight, lanes[index]!.maxFrequencyHz, options.tickColor, cssY);
+
+      if (index > 0) {
+        context.save();
+        context.strokeStyle = options.tickColor ?? "rgba(255, 255, 255, 0.42)";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(0, cssY + 0.5);
+        context.lineTo(cssWidth, cssY + 0.5);
+        context.stroke();
+        context.restore();
+      }
+    }
+    return;
+  }
+
+  drawSpectrogramLane(context, lanes[0]!, pixelWidth, pixelHeight, 0, options);
+  drawFrequencyTicks(context, cssWidth, cssHeight, lanes[0]!.maxFrequencyHz, options.tickColor);
+}
+
+function drawSpectrogramLane(
+  context: CanvasRenderingContext2D,
+  spectrogram: SpectrogramData,
+  pixelWidth: number,
+  pixelHeight: number,
+  yOffset: number,
+  options: {
+    colorMap: ColorMapName;
+    background: string;
+    tickColor?: string;
+  },
+): void {
   const image = context.createImageData(pixelWidth, pixelHeight);
   const range = spectrogram.maxDb - spectrogram.minDb;
 
@@ -45,8 +87,7 @@ export function drawSpectrogram(
     }
   }
 
-  context.putImageData(image, 0, 0);
-  drawFrequencyTicks(context, cssWidth, cssHeight, spectrogram.maxFrequencyHz, options.tickColor);
+  context.putImageData(image, 0, yOffset);
 }
 
 export function chooseFrequencyTickStep(nyquistHz: number, height: number): number {
@@ -65,6 +106,7 @@ function drawFrequencyTicks(
   height: number,
   maxFrequencyHz: number,
   tickColor = "rgba(255, 255, 255, 0.42)",
+  yOffset = 0,
 ): void {
   const step = chooseFrequencyTickStep(maxFrequencyHz, height);
   const labelPadding = 5;
@@ -78,7 +120,7 @@ function drawFrequencyTicks(
   context.textBaseline = "middle";
 
   for (let hz = step; hz < maxFrequencyHz; hz += step) {
-    const y = height - (hz / maxFrequencyHz) * height;
+    const y = yOffset + height - (hz / maxFrequencyHz) * height;
     context.beginPath();
     context.moveTo(0, y + 0.5);
     context.lineTo(width, y + 0.5);
@@ -87,10 +129,10 @@ function drawFrequencyTicks(
   }
 
   context.beginPath();
-  context.moveTo(0, 0.5);
-  context.lineTo(width, 0.5);
+  context.moveTo(0, yOffset + 0.5);
+  context.lineTo(width, yOffset + 0.5);
   context.stroke();
-  context.fillText(formatFrequencyTick(maxFrequencyHz), labelPadding, 8);
+  context.fillText(formatFrequencyTick(maxFrequencyHz), labelPadding, yOffset + 8);
 
   context.restore();
 }

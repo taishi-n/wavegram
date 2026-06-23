@@ -21,7 +21,7 @@ const id = session.sessionId;
 
 try {
   await request("POST", `/session/${id}/url`, {
-    url: "http://127.0.0.1:4173/examples/basic.html",
+    url: "http://127.0.0.1:4173/examples/index.html",
   });
   await new Promise((resolve) => setTimeout(resolve, 3000));
 

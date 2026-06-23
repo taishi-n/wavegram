@@ -164,30 +164,6 @@
       </section>
 
       <section>
-        <h2>Multiple Players</h2>
-        <p class="description">Several players can be placed on the same page with independent audio sources.</p>
-        <div class="demo-grid">
-          <div class="demo-stack">
-            <div class="demo-item">
-              <p class="demo-label">voice.wav</p>
-              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"></wavegram-player>
-            </div>
-            <div class="demo-item">
-              <p class="demo-label">synth.wav</p>
-              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/synth.wav"></wavegram-player>
-            </div>
-            <div class="demo-item">
-              <p class="demo-label">gc.wav</p>
-              <wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/gc.wav"></wavegram-player>
-            </div>
-          </div>
-          <pre><code>&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"&gt;&lt;/wavegram-player&gt;
-&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/synth.wav"&gt;&lt;/wavegram-player&gt;
-&lt;wavegram-player src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/gc.wav"&gt;&lt;/wavegram-player&gt;</code></pre>
-        </div>
-      </section>
-
-      <section>
         <h2>Waveform Only</h2>
         <p class="description">Hide the spectrogram and increase the waveform height.</p>
         <div class="demo-grid">
@@ -222,16 +198,86 @@
       </section>
 
       <section>
-        <h2>Large-File Settings</h2>
-        <p class="description">Use larger FFT and hop sizes when a lower-detail spectrogram is acceptable.</p>
+        <h2>Spectrogram Resolution: FFT Size and Hop Size</h2>
+        <p class="description">
+          Compare STFT analysis settings. Smaller <code>hop-size</code> gives denser time frames, while larger
+          <code>fft-size</code> gives more frequency bins.
+        </p>
         <div class="demo-grid">
-          <wavegram-player
-            src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
-            fft-size="1024"
-            hop-size="512"
-          ></wavegram-player>
-          <pre><code>&lt;wavegram-player
+          <div class="demo-stack">
+            <div class="demo-item">
+              <p class="demo-label">Higher time resolution: fft-size 512, hop-size 128</p>
+              <wavegram-player
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-waveform="false"
+                spectrogram-height="120"
+                fft-size="512"
+                hop-size="128"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Default analysis: fft-size 1024, hop-size 256</p>
+              <wavegram-player
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-waveform="false"
+                spectrogram-height="120"
+                fft-size="1024"
+                hop-size="256"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Higher frequency resolution: fft-size 2048, hop-size 512</p>
+              <wavegram-player
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-waveform="false"
+                spectrogram-height="120"
+                fft-size="2048"
+                hop-size="512"
+              ></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Lower frame density: fft-size 1024, hop-size 512</p>
+              <wavegram-player
+                src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+                show-waveform="false"
+                spectrogram-height="120"
+                fft-size="1024"
+                hop-size="512"
+              ></wavegram-player>
+            </div>
+          </div>
+          <pre><code>&lt;!-- Higher time resolution: more frequent STFT frames. --&gt;
+&lt;wavegram-player
   src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-waveform="false"
+  spectrogram-height="120"
+  fft-size="512"
+  hop-size="128"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;!-- Default analysis settings. --&gt;
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-waveform="false"
+  spectrogram-height="120"
+  fft-size="1024"
+  hop-size="256"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;!-- Higher frequency resolution: more FFT bins. --&gt;
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-waveform="false"
+  spectrogram-height="120"
+  fft-size="2048"
+  hop-size="512"
+&gt;&lt;/wavegram-player&gt;
+
+&lt;!-- Lower frame density: fewer time frames to draw. --&gt;
+&lt;wavegram-player
+  src="https://raw.githubusercontent.com/pdx-cs-sound/wavs/main/voice.wav"
+  show-waveform="false"
+  spectrogram-height="120"
   fft-size="1024"
   hop-size="512"
 &gt;&lt;/wavegram-player&gt;</code></pre>
@@ -240,23 +286,37 @@
 
       <section>
         <h2>Multichannel WAV</h2>
-        <p class="description">Choose the mixed signal or a specific channel from a multichannel source.</p>
+        <p class="description">
+          With no <code>channel</code> attribute, each source channel is shown as its own vertical lane. Use
+          <code>channel="mix"</code> to average channels into one mono view, or pass a zero-based channel index to inspect
+          one channel.
+        </p>
         <div class="demo-grid">
           <div class="demo-stack">
             <div class="demo-item">
-              <p class="demo-label">Mix</p>
+              <p class="demo-label">Default: all channels</p>
+              <wavegram-player src="./stereo-tone.wav"></wavegram-player>
+            </div>
+            <div class="demo-item">
+              <p class="demo-label">Mix: averaged mono view</p>
               <wavegram-player src="./stereo-tone.wav" channel="mix"></wavegram-player>
             </div>
             <div class="demo-item">
-              <p class="demo-label">Channel 0</p>
+              <p class="demo-label">Channel 0 only</p>
               <wavegram-player src="./stereo-tone.wav" channel="0"></wavegram-player>
             </div>
             <div class="demo-item">
-              <p class="demo-label">Channel 1</p>
+              <p class="demo-label">Channel 1 only</p>
               <wavegram-player src="./stereo-tone.wav" channel="1"></wavegram-player>
             </div>
           </div>
-          <pre><code>&lt;wavegram-player src="./stereo-tone.wav" channel="mix"&gt;&lt;/wavegram-player&gt;
+          <pre><code>&lt;!-- Default: show every channel as a vertical lane. --&gt;
+&lt;wavegram-player src="./stereo-tone.wav"&gt;&lt;/wavegram-player&gt;
+
+&lt;!-- Mix all channels into one mono waveform and spectrogram. --&gt;
+&lt;wavegram-player src="./stereo-tone.wav" channel="mix"&gt;&lt;/wavegram-player&gt;
+
+&lt;!-- Show only a specific zero-based channel. --&gt;
 &lt;wavegram-player src="./stereo-tone.wav" channel="0"&gt;&lt;/wavegram-player&gt;
 &lt;wavegram-player src="./stereo-tone.wav" channel="1"&gt;&lt;/wavegram-player&gt;</code></pre>
         </div>

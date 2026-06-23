@@ -7,6 +7,7 @@ import { drawCursor } from "../src/render/drawCursor";
 import { chooseFrequencyTickStep, drawSpectrogram } from "../src/render/drawSpectrogram";
 import { drawWaveform } from "../src/render/drawWaveform";
 import { formatTime } from "../src/utils/formatTime";
+import { pickChannels } from "../src/utils/resample";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -133,6 +134,11 @@ describe("audio file metadata", () => {
 });
 
 describe("colorMap", () => {
+  it("maps magma values", () => {
+    expect(colorMap("magma", 0)).toEqual([0, 0, 4]);
+    expect(colorMap("magma", 1)).toEqual([252, 253, 191]);
+  });
+
   it("maps audition values", () => {
     expect(colorMap("audition", 0)).toEqual([0, 0, 0]);
     expect(colorMap("audition", 1)).toEqual([255, 238, 117]);
@@ -141,6 +147,26 @@ describe("colorMap", () => {
   it("maps gray values", () => {
     expect(colorMap("gray", 0)).toEqual([0, 0, 0]);
     expect(colorMap("gray", 1)).toEqual([255, 255, 255]);
+  });
+});
+
+describe("pickChannels", () => {
+  it("returns every channel separately for all and averages channels for mix", () => {
+    const channels = [new Float32Array([1, -1]), new Float32Array([-0.5, 0.5])];
+    const buffer = {
+      length: 2,
+      numberOfChannels: 2,
+      getChannelData: (index: number) => channels[index]!,
+    } as unknown as AudioBuffer;
+
+    const all = pickChannels(buffer, "all");
+    expect(all).toHaveLength(2);
+    expect(Array.from(all[0]!)).toEqual([1, -1]);
+    expect(Array.from(all[1]!)).toEqual([-0.5, 0.5]);
+
+    const mix = pickChannels(buffer, "mix");
+    expect(mix).toHaveLength(1);
+    expect(Array.from(mix[0]!)).toEqual([0.25, -0.25]);
   });
 });
 

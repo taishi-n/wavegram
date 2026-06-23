@@ -2,7 +2,7 @@ import type { WaveformPeaks, WaveformStyle } from "../types";
 
 export function drawWaveform(
   canvas: HTMLCanvasElement,
-  peaks: WaveformPeaks | undefined,
+  peaks: WaveformPeaks | WaveformPeaks[] | undefined,
   options: {
     color: string;
     playedColor?: string;
@@ -19,7 +19,6 @@ export function drawWaveform(
   if (!context) return;
 
   const { width, height } = getLogicalCanvasSize(canvas, context);
-  const center = height / 2;
   context.clearRect(0, 0, width, height);
   context.fillStyle = options.background;
   context.fillRect(0, 0, width, height);
@@ -27,7 +26,53 @@ export function drawWaveform(
   context.lineWidth = 1;
 
   if (!peaks) return;
+  const lanes = Array.isArray(peaks) ? peaks : [peaks];
+  if (lanes.length === 0) return;
 
+  if (lanes.length > 1) {
+    const laneHeight = height / lanes.length;
+    for (let index = 0; index < lanes.length; index += 1) {
+      const y = index * laneHeight;
+      context.save();
+      context.beginPath();
+      context.rect(0, y, width, laneHeight);
+      context.clip();
+      context.translate(0, y);
+      drawWaveformLane(context, lanes[index]!, width, laneHeight, options);
+      context.restore();
+
+      if (index > 0) {
+        context.strokeStyle = options.centerColor ?? options.color;
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(0, y + 0.5);
+        context.lineTo(width, y + 0.5);
+        context.stroke();
+      }
+    }
+    return;
+  }
+
+  drawWaveformLane(context, lanes[0]!, width, height, options);
+}
+
+function drawWaveformLane(
+  context: CanvasRenderingContext2D,
+  peaks: WaveformPeaks,
+  width: number,
+  height: number,
+  options: {
+    color: string;
+    playedColor?: string;
+    background: string;
+    centerColor?: string;
+    progressColor?: string;
+    style?: WaveformStyle;
+    barWidth?: number;
+    barSpacing?: number;
+    progress?: number;
+  },
+): void {
   const style = options.style ?? "waveform";
   const amplitudes = peaksToAmplitudes(peaks);
   const defaults = styleDefaults(style);

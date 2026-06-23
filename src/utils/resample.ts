@@ -16,3 +16,10 @@ export function pickChannel(buffer: AudioBuffer, channel: number | "mix"): Float
 
   return new Float32Array(buffer.getChannelData(channel));
 }
+
+export function pickChannels(buffer: AudioBuffer, channel: number | "mix" | "all"): Float32Array[] {
+  if (channel === "all") {
+    return Array.from({ length: buffer.numberOfChannels }, (_, index) => new Float32Array(buffer.getChannelData(index)));
+  }
+  return [pickChannel(buffer, channel)];
+}
